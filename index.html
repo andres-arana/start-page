@@ -22,7 +22,9 @@
       content: '';
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.52);
+      background: rgba(0, 0, 0, 0.68);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       z-index: 0;
     }
 
@@ -37,7 +39,7 @@
 
     /* ── Clock ── */
     .clock #time {
-      font-size: 3rem;
+      font-size: 4.5rem;
       font-weight: 300;
       letter-spacing: 0.04em;
       line-height: 1;
@@ -45,7 +47,7 @@
 
     .clock #date {
       margin-top: 0.3rem;
-      font-size: 0.875rem;
+      font-size: 1.3rem;
       color: rgba(255, 255, 255, 0.45);
       letter-spacing: 0.03em;
     }
@@ -53,6 +55,8 @@
     /* ── Weather ── */
     .weather {
       text-align: right;
+      text-decoration: none;
+      color: inherit;
     }
 
     .weather-main {
@@ -63,19 +67,19 @@
     }
 
     .weather-temp {
-      font-size: 2.5rem;
+      font-size: 3.75rem;
       font-weight: 300;
       line-height: 1;
     }
 
     .weather-condition {
-      font-size: 0.9rem;
+      font-size: 1.35rem;
       color: rgba(255, 255, 255, 0.55);
     }
 
     .weather-details {
       margin-top: 0.3rem;
-      font-size: 0.78rem;
+      font-size: 1.17rem;
       color: rgba(255, 255, 255, 0.4);
     }
 
@@ -94,19 +98,19 @@
     }
 
     .forecast-day .day-name {
-      font-size: 0.68rem;
+      font-size: 1rem;
       color: rgba(255, 255, 255, 0.35);
       text-transform: uppercase;
       letter-spacing: 0.07em;
     }
 
     .forecast-day .day-temp {
-      font-size: 0.8rem;
+      font-size: 1.2rem;
       color: rgba(255, 255, 255, 0.7);
     }
 
     .forecast-day .day-cond {
-      font-size: 0.68rem;
+      font-size: 1rem;
       color: rgba(255, 255, 255, 0.35);
     }
 
@@ -143,7 +147,7 @@
       border-radius: 8px;
       text-decoration: none;
       color: rgba(255, 255, 255, 0.75);
-      font-size: 0.875rem;
+      font-size: 1.3rem;
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
       transition: background 0.15s, color 0.15s, border-color 0.15s;
@@ -156,8 +160,8 @@
     }
 
     .link-item img {
-      width: 16px;
-      height: 16px;
+      width: 22px;
+      height: 22px;
       flex-shrink: 0;
     }
   </style>
@@ -193,6 +197,10 @@
           <img src="https://www.google.com/s2/favicons?domain=mail.google.com&sz=32" alt="">
           Gmail
         </a>
+        <a class="link-item" href="https://calendar.google.com">
+          <img src="https://www.google.com/s2/favicons?domain=calendar.google.com&sz=32" alt="">
+          Calendar
+        </a>
         <a class="link-item" href="https://youtube.com">
           <img src="https://www.google.com/s2/favicons?domain=youtube.com&sz=32" alt="">
           YouTube
@@ -200,14 +208,6 @@
         <a class="link-item" href="https://reddit.com">
           <img src="https://www.google.com/s2/favicons?domain=reddit.com&sz=32" alt="">
           Reddit
-        </a>
-        <a class="link-item" href="https://news.ycombinator.com">
-          <img src="https://www.google.com/s2/favicons?domain=news.ycombinator.com&sz=32" alt="">
-          Hacker News
-        </a>
-        <a class="link-item" href="https://lobste.rs">
-          <img src="https://www.google.com/s2/favicons?domain=lobste.rs&sz=32" alt="">
-          Lobsters
         </a>
         <!-- ── Add more links above this line ── -->
       </div>
