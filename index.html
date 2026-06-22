@@ -254,7 +254,19 @@
       95:'Thunderstorm', 96:'Thunderstorm + hail', 99:'Thunderstorm + hail'
     };
 
+    var WMO_ICON = {
+      0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️',
+      45:'🌫️', 48:'🌫️',
+      51:'🌦️', 53:'🌦️', 55:'🌦️',
+      61:'🌧️', 63:'🌧️', 65:'🌧️',
+      71:'🌨️', 73:'🌨️', 75:'🌨️', 77:'🌨️',
+      80:'🌦️', 81:'🌦️', 82:'🌧️',
+      85:'🌨️', 86:'🌨️',
+      95:'⛈️', 96:'⛈️', 99:'⛈️'
+    };
+
     function wmo(code) { return WMO[code] || ''; }
+    function wmoIcon(code) { return WMO_ICON[code] || '🌡️'; }
 
     function fetchWeather(lat, lon) {
       var url = 'https://api.open-meteo.com/v1/forecast' +
@@ -272,7 +284,7 @@
           document.getElementById('w-temp').textContent =
             Math.round(c.temperature_2m) + '°C';
           document.getElementById('w-cond').textContent =
-            wmo(c.weather_code);
+            wmoIcon(c.weather_code) + ' ' + wmo(c.weather_code);
           document.getElementById('w-details').textContent =
             'Feels like ' + Math.round(c.apparent_temperature) + '°C  ·  ' +
             'H ' + Math.round(d.temperature_2m_max[0]) + '°  ' +
@@ -286,6 +298,7 @@
             div.className = 'forecast-day';
             div.innerHTML =
               '<span class="day-name">' + dayNames[date.getDay()] + '</span>' +
+              '<span style="font-size:1.4rem">' + wmoIcon(d.weather_code[i]) + '</span>' +
               '<span class="day-temp">' +
                 Math.round(d.temperature_2m_max[i]) + '° / ' +
                 Math.round(d.temperature_2m_min[i]) + '°' +
