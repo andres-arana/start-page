@@ -31,7 +31,7 @@
     .page {
       position: relative;
       z-index: 1;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -98,6 +98,72 @@
       height: 22px;
       flex-shrink: 0;
     }
+
+    /* ── Shortcuts reference ── */
+    .shortcuts {
+      width: min(1400px, 100%);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 0.8rem;
+      align-items: start;
+    }
+
+    .shortcut-group {
+      padding: 0.8rem 1.1rem;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .shortcut-group h2 {
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .shortcut-group dl {
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+
+    .shortcut-group dt {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.25rem 0.1rem;
+      margin-top: 0.7rem;
+    }
+
+    .shortcut-group dt:first-of-type { margin-top: 0; }
+
+    .shortcut-group dd {
+      margin-top: 0.15rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* A description with no keys of its own (plain tip text). */
+    .shortcut-group dd.wide { margin-top: 0.7rem; }
+
+    kbd, code {
+      display: inline-block;
+      padding: 0.05rem 0.45rem;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 5px;
+      font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+      font-size: 0.9em;
+      color: #fff;
+    }
+
+    .sep { margin: 0 0.15rem; color: rgba(255, 255, 255, 0.45); }
+
+    /* Keeps a key combination on one line; wrapping happens between combinations. */
+    .combo { display: inline-flex; align-items: center; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -139,6 +205,8 @@
       </a>
       <!-- ── Add more links above this line ── -->
     </div>
+
+    <section class="shortcuts" id="shortcuts" aria-label="Shortcuts"></section>
   </div>
 
   <script>
@@ -190,6 +258,81 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(function () {});
     }
+
+    // Shortcuts reference — always visible, grouped. Edit the data below to add or change entries.
+    // Keep examples generic: this repo is public, so no project names or IDs here.
+    // combos: key combinations shown as <kbd>; codes: text to type, shown as <code>.
+    (function () {
+      var GROUPS = [
+        { title: 'Containers', items: [
+          { combos: [['Ctrl', 'Shift', '1'], ['Ctrl', 'Shift', '2']], text: 'New tab in GFW / Observatorio. Open it first, then type a keyword.' },
+          { combos: [['Alt', 'Shift', '1'], ['Alt', 'Shift', '2']], text: 'Reopen this tab in GFW / Observatorio (closes the old tab).' },
+          { text: 'Right-click a link → Open Link in New Container Tab.', wide: true }
+        ] },
+        { title: 'Address bar', items: [
+          { codes: ['* text'], text: 'Bookmarks only' },
+          { codes: ['^ text'], text: 'History only' },
+          { codes: ['% text'], text: 'Open tabs only' },
+          { codes: ['? text'], text: 'Web search only' },
+          { combos: [['Tab']], text: 'Step through the results' }
+        ] },
+        { title: 'Keywords', items: [
+          { codes: ['gfw-gc-<variant> <service>'], text: 'GCP console, e.g. bigquery. Also obs-gc' },
+          { codes: ['gfw-jira KEY', 'obs-jira KEY'], text: 'Jira issue. Add -board for the board' },
+          { codes: ['gfw-', 'obs-', 'own-'], text: 'then mail, cal, meet [code] or gdrive [query]' },
+          { codes: ['gh org/repo', 'gfw-gh repo', 'ghs query'], text: 'GitHub repo or repo search' },
+          { codes: ['ddg text', 'y text', 'map text'], text: 'DuckDuckGo, YouTube, Maps' },
+          { codes: ['* gfw-gc'], text: 'Forgot one? The keyword is in the bookmark title' }
+        ] },
+        { title: 'Firefox', items: [
+          { combos: [['Ctrl', 'T'], ['Ctrl', 'L']], text: 'New blank tab / focus the address bar' },
+          { combos: [['Alt', 'Enter']], text: 'Open the typed address in a new tab' },
+          { combos: [['Ctrl', 'Shift', 'T']], text: 'Reopen the last closed tab' },
+          { combos: [['Ctrl', 'M']], text: 'Mute or unmute the tab' },
+          { combos: [['Alt', '←'], ['Alt', '→']], text: 'Back / forward' },
+          { codes: ['\''], text: 'Quick find, links only; Enter follows' },
+          { combos: [['Ctrl', 'Enter']], text: 'Complete name to www.name.com' }
+        ] }
+      ];
+
+      function el(tag, cls, text) {
+        var e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (text) e.textContent = text;
+        return e;
+      }
+
+      function keysFor(item) {
+        var keys = el('dt');
+        var first = true;
+        function sep() { if (!first) keys.appendChild(el('span', 'sep', ' / ')); first = false; }
+        (item.combos || []).forEach(function (combo) {
+          sep();
+          var group = el('span', 'combo');
+          combo.forEach(function (k, i) {
+            if (i) group.appendChild(el('span', 'sep', '+'));
+            group.appendChild(el('kbd', '', k));
+          });
+          keys.appendChild(group);
+        });
+        (item.codes || []).forEach(function (c) { sep(); keys.appendChild(el('code', '', c)); });
+        return keys;
+      }
+
+      var root = document.getElementById('shortcuts');
+      GROUPS.forEach(function (group) {
+        var section = el('div', 'shortcut-group');
+        section.appendChild(el('h2', '', group.title));
+        var dl = el('dl');
+        group.items.forEach(function (item) {
+          var hasKeys = (item.combos && item.combos.length) || (item.codes && item.codes.length);
+          if (hasKeys) dl.appendChild(keysFor(item));
+          dl.appendChild(el('dd', hasKeys ? '' : 'wide', item.text));
+        });
+        section.appendChild(dl);
+        root.appendChild(section);
+      });
+    })();
 
     // Clock
     function updateClock() {
